@@ -21,6 +21,6 @@ error = abs(p.optval - (6 - sqrt(big&quot;2.0&quot;))/4)
 time = @belapsed solve!(p, SDPAFamily.Optimizer(silent = true, presolve = true, variant = :sdpa_gmp))
 error = abs(p.optval - (6 - sqrt(big&quot;2.0&quot;))/4)
 @printf(&quot;SDPA-gmp solved the problem with an absolute error of %.2e in %.3f seconds.\n&quot;, error, time)</code></pre><pre><code class="language-none">SDPA solved the problem with an absolute error of 1.44e-07 in 0.032 seconds.
-SDPA-dd solved the problem with an absolute error of 4.75e-16 in 0.035 seconds.
-SDPA-qd solved the problem with an absolute error of 3.13e-17 in 0.090 seconds.
-SDPA-gmp solved the problem with an absolute error of 2.30e-31 in 0.126 seconds.</code></pre><footer><hr/><a class="previous" href="../usage/"><span class="direction">Previous</span><span class="title">Usage</span></a><a class="next" href="../benchmarks/"><span class="direction">Next</span><span class="title">Benchmarks</span></a></footer></article></body></html>
+SDPA-dd solved the problem with an absolute error of 4.75e-16 in 0.036 seconds.
+SDPA-qd solved the problem with an absolute error of 3.13e-17 in 0.091 seconds.
+SDPA-gmp solved the problem with an absolute error of 2.30e-31 in 0.125 seconds.</code></pre><footer><hr/><a class="previous" href="../usage/"><span class="direction">Previous</span><span class="title">Usage</span></a><a class="next" href="../benchmarks/"><span class="direction">Next</span><span class="title">Benchmarks</span></a></footer></article></body></html>
