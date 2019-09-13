@@ -1,8 +1,6 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Examples · SDPAFamily.jl</title><link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css" rel="stylesheet" type="text/css"/><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link href="../assets/documenter.css" rel="stylesheet" type="text/css"/></head><body><nav class="toc"><h1>SDPAFamily.jl</h1><select id="version-selector" onChange="window.location.href=this.value" style="visibility: hidden"></select><form class="search" id="search-form" action="../search/"><input id="search-query" name="q" type="text" placeholder="Search docs"/></form><ul><li><a class="toctext" href="../">Home</a></li><li><a class="toctext" href="../installation/">Installation</a></li><li><a class="toctext" href="../usage/">Usage</a></li><li class="current"><a class="toctext" href>Examples</a><ul class="internal"></ul></li><li><a class="toctext" href="../benchmarks/">Benchmarks</a></li><li><a class="toctext" href="../problematicproblems/">Problematic problems &amp; troubleshooting</a></li><li><a class="toctext" href="../reference/">Developer reference</a></li></ul></nav><article id="docs"><header><nav><ul><li><a href>Examples</a></li></ul><a class="edit-page" href="https://github.com/ericphanson/SDPAFamily.jl/blob/master/docs/src/examples.md#L"><span class="fa"></span> Edit on GitHub</a></nav><hr/><div id="topbar"><span>Examples</span><a class="fa fa-bars" href="#"></a></div></header><pre><code class="language-julia">using SDPAFamily
-using Pkg
-Pkg.add(PackageSpec(name=&quot;Convex&quot;, url=&quot;https://github.com/ericphanson/Convex.jl&quot;, rev=&quot;MathOptInterface&quot;));
-using Convex
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Examples · SDPAFamily.jl</title><link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css" rel="stylesheet" type="text/css"/><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.min.js" data-main="../assets/documenter.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link href="../assets/documenter.css" rel="stylesheet" type="text/css"/></head><body><nav class="toc"><h1>SDPAFamily.jl</h1><select id="version-selector" onChange="window.location.href=this.value" style="visibility: hidden"></select><form class="search" id="search-form" action="../search/"><input id="search-query" name="q" type="text" placeholder="Search docs"/></form><ul><li><a class="toctext" href="../">Home</a></li><li><a class="toctext" href="../installation/">Installation</a></li><li><a class="toctext" href="../usage/">Usage</a></li><li class="current"><a class="toctext" href>Examples</a><ul class="internal"></ul></li><li><a class="toctext" href="../benchmarks/">Benchmarks</a></li><li><a class="toctext" href="../problematicproblems/">Problematic problems &amp; troubleshooting</a></li><li><a class="toctext" href="../reference/">Developer reference</a></li></ul></nav><article id="docs"><header><nav><ul><li><a href>Examples</a></li></ul><a class="edit-page" href="https://github.com/ericphanson/SDPAFamily.jl/blob/master/docs/src/examples.md#L"><span class="fa"></span> Edit on GitHub</a></nav><hr/><div id="topbar"><span>Examples</span><a class="fa fa-bars" href="#"></a></div></header><div></div><pre><code class="language-julia">using SDPAFamily, Printf
+using Convex # ] add https://github.com/ericphanson/Convex.jl#MathOptInterface
 
 E12, E21 = ComplexVariable(2, 2), ComplexVariable(2, 2)
 s1, s2 = [big&quot;0.25&quot; big&quot;-0.25&quot;*im; big&quot;0.25&quot;*im big&quot;0.25&quot;], [big&quot;0.5&quot; big&quot;0.0&quot;; big&quot;0.0&quot; big&quot;0.0&quot;]
@@ -10,39 +8,19 @@ p = Problem{BigFloat}(:minimize, real(tr(E12 * (s1 + 2 * s2) + E21 * (s2 + 2 * s
 
 time = @elapsed solve!(p, SDPAFamily.Optimizer(silent = true, presolve = true, variant = :sdpa))
 error = abs(p.optval - (6 - sqrt(big&quot;2.0&quot;))/4)
-@info &quot;SDPA solved the problem with an absolute error of &quot; error time
+@printf(&quot;SDPA solved the problem with an absolute error of %.2e in %.3f seconds.\n&quot;, error, time)
 
 time = @elapsed solve!(p, SDPAFamily.Optimizer(silent = true, presolve = true, variant = :sdpa_dd))
 error = abs(p.optval - (6 - sqrt(big&quot;2.0&quot;))/4)
-@info &quot;SDPA-dd solved the problem with an absolute error of &quot; error time
+@printf(&quot;SDPA-dd solved the problem with an absolute error of %.2e in %.3f seconds.\n&quot;, error, time)
 
 time = @elapsed solve!(p, SDPAFamily.Optimizer(silent = true, presolve = true, variant = :sdpa_qd))
 error = abs(p.optval - (6 - sqrt(big&quot;2.0&quot;))/4)
-@info &quot;SDPA-qd solved the problem with an absolute error of &quot; error time
+@printf(&quot;SDPA-qd solved the problem with an absolute error of %.2e in %.3f seconds.\n&quot;, error, time)
 
 time = @elapsed solve!(p, SDPAFamily.Optimizer(silent = true, presolve = true, variant = :sdpa_gmp))
 error = abs(p.optval - (6 - sqrt(big&quot;2.0&quot;))/4)
-@info &quot;SDPA-gmp solved the problem with an absolute error of &quot; error time</code></pre><pre><code class="language-none">  Updating registry at `~/.julia/registries/General`
-  Updating git-repo `https://github.com/JuliaRegistries/General.git`
-[?25l[2K[?25h   Cloning git-repo `https://github.com/ericphanson/Convex.jl`
-[?25l    Fetching: [&gt;                                        ]  0.0 %[2K[?25h  Updating git-repo `https://github.com/ericphanson/Convex.jl`
-[?25l[2K[?25h Resolving package versions...
-  Updating `~/build/ericphanson/SDPAFamily.jl/docs/Project.toml`
-  [f65535da] ~ Convex v0.12.5 ⇒ v0.12.5 #MathOptInterface (https://github.com/ericphanson/Convex.jl)
-  Updating `~/build/ericphanson/SDPAFamily.jl/docs/Manifest.toml`
-  [34da2185] - Compat v2.1.0
-  [f65535da] ~ Convex v0.12.5 ⇒ v0.12.5 #MathOptInterface (https://github.com/ericphanson/Convex.jl)
-  [fdba3010] - MathProgBase v0.7.7
-  [1a1011a3] - SharedArrays
-┌ Info: SDPA solved the problem with an absolute error of
-│   error = 1.440769272622004221810524245196424179688442370182941699344976831196155220475437e-07
-└   time = 40.742421878
-┌ Info: SDPA-dd solved the problem with an absolute error of
-│   error = 4.754321277976881605976424179688442370182941699344976831196155183032509821638602e-16
-└   time = 0.047982317
-┌ Info: SDPA-qd solved the problem with an absolute error of
-│   error = 3.134291794762554442821366125497704951829416993449768311961552117679440034292277e-17
-└   time = 0.081719629
-┌ Info: SDPA-gmp solved the problem with an absolute error of
-│   error = 2.300830505346617389783827706299894944830363297643029476460592026271340401539914e-31
-└   time = 0.115848946</code></pre><footer><hr/><a class="previous" href="../usage/"><span class="direction">Previous</span><span class="title">Usage</span></a><a class="next" href="../benchmarks/"><span class="direction">Next</span><span class="title">Benchmarks</span></a></footer></article></body></html>
+@printf(&quot;SDPA-gmp solved the problem with an absolute error of %.2e in %.3f seconds.\n&quot;, error, time)</code></pre><pre><code class="language-none">SDPA solved the problem with an absolute error of 1.44e-07 in 0.050 seconds.
+SDPA-dd solved the problem with an absolute error of 4.75e-16 in 0.052 seconds.
+SDPA-qd solved the problem with an absolute error of 3.13e-17 in 0.103 seconds.
+SDPA-gmp solved the problem with an absolute error of 2.30e-31 in 0.143 seconds.</code></pre><footer><hr/><a class="previous" href="../usage/"><span class="direction">Previous</span><span class="title">Usage</span></a><a class="next" href="../benchmarks/"><span class="direction">Next</span><span class="title">Benchmarks</span></a></footer></article></body></html>
