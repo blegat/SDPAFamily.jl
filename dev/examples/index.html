@@ -36,12 +36,12 @@ sdpa_gmp solved the problem with an absolute error of 2.70e-31.</code></pre><p>H
 end</code></pre><pre><code class="language-none">┌ Warning: Problem status SLOW_PROGRESS; solution may be inaccurate.
 └ @ Convex ~/.julia/packages/Convex/r4w0m/src/MOI_solve.jl:199
 sdpa solved the problem with an absolute error of 1.17e-02.
-┌ Warning: Problem status OPTIMIZE_NOT_CALLED; solution may be inaccurate.
+┌ Warning: Problem status ITERATION_LIMIT; solution may be inaccurate.
 └ @ Convex ~/.julia/packages/Convex/r4w0m/src/MOI_solve.jl:199
 sdpa_dd solved the problem with an absolute error of 8.54e-01.
-┌ Warning: Problem status OPTIMIZE_NOT_CALLED; solution may be inaccurate.
+┌ Warning: Problem status ITERATION_LIMIT; solution may be inaccurate.
 └ @ Convex ~/.julia/packages/Convex/r4w0m/src/MOI_solve.jl:199
 sdpa_qd solved the problem with an absolute error of 8.54e-01.
-┌ Warning: Problem status OPTIMIZE_NOT_CALLED; solution may be inaccurate.
+┌ Warning: Problem status ITERATION_LIMIT; solution may be inaccurate.
 └ @ Convex ~/.julia/packages/Convex/r4w0m/src/MOI_solve.jl:199
 sdpa_gmp solved the problem with an absolute error of 8.54e-01.</code></pre><p>We can see that without the presolve routine, we have only recovered the true solution up to errors of size <span>$\sim 10^{-1}$</span> for <code>:sdpa</code> variant. All other variants have failed to produce a result due to redundant constraints and returned with default value 0.</p><footer><hr/><a class="previous" href="../usage/"><span class="direction">Previous</span><span class="title">Usage</span></a><a class="next" href="../issues/"><span class="direction">Next</span><span class="title">Possible Issues &amp; Troubleshooting</span></a></footer></article></body></html>

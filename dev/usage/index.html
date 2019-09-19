@@ -6,7 +6,7 @@ julia&gt; solve!(p, SDPAFamily.Optimizer())
 Warning: cholesky miss condition :: not positive definite :: info = 16 :: line 643 in sdpa_linear.cpp
 ┌ Warning: &#39;cholesky miss condition&#39; warning detected; results may be unreliable. Try `presolve=true`, or see troubleshooting guide.
 └ @ SDPAFamily ~/build/ericphanson/SDPAFamily.jl/src/binary_call.jl:49
-┌ Warning: Problem status OPTIMIZE_NOT_CALLED; solution may be inaccurate.
+┌ Warning: Problem status ITERATION_LIMIT; solution may be inaccurate.
 └ @ Convex ~/.julia/packages/Convex/r4w0m/src/MOI_solve.jl:199</code></pre><p>Applying presolve helps by removing 8 redundant constraints from the final input file.</p><pre><code class="language-julia-repl">julia&gt; opt.presolve = true; opt.verbosity = SDPAFamily.SILENT;
 
 julia&gt; solve!(p, opt)
