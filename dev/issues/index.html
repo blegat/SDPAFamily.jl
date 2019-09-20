@@ -19,7 +19,10 @@ julia&gt; rows = Set(rowvals(SDPAFamily.reduce!(M)[:, 1:end-1]));
 julia&gt; redundant = collect(setdiff!(Set(1:10), rows));
 
 julia&gt; @test length(redundant) &gt;= 1
-Test Passed</code></pre><h2><a class="nav-anchor" id="Choice-of-parameters-1" href="#Choice-of-parameters-1">Choice of parameters</a></h2><p>Unfortunately, we have not been able to successfully solve every problem that we have tried with one choice of parameters. We have chosen default parameter settings that we hope will work with a wide variety of problems. See <a href="../usage/#Usage-1">Usage</a> for details on switching to two other sets of parameters provided by the solvers.</p><p>This is an example where a better choice of parameters can help.</p><pre><code class="language-julia-repl">julia&gt; test_problem = Convex.ProblemDepot.PROBLEMS[&quot;lp&quot;][&quot;lp_dotsort_atom&quot;];
+Test Failed at none:1
+  Expression: length(redundant) &gt;= 1
+   Evaluated: 0 &gt;= 1
+ERROR: There was an error during testing</code></pre><h2><a class="nav-anchor" id="Choice-of-parameters-1" href="#Choice-of-parameters-1">Choice of parameters</a></h2><p>Unfortunately, we have not been able to successfully solve every problem that we have tried with one choice of parameters. We have chosen default parameter settings that we hope will work with a wide variety of problems. See <a href="../usage/#Usage-1">Usage</a> for details on switching to two other sets of parameters provided by the solvers.</p><p>This is an example where a better choice of parameters can help.</p><pre><code class="language-julia-repl">julia&gt; test_problem = Convex.ProblemDepot.PROBLEMS[&quot;lp&quot;][&quot;lp_dotsort_atom&quot;];
 
 julia&gt; TEST = true; atol = 1e-3; rtol = 0.0;
 
