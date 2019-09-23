@@ -8,12 +8,12 @@ Variable
 size: (3, 3)
 sign: real
 vexity: affine
-id: 125…274
+id: 120…828
 
 julia&gt; p = maximize(lambdamin(y), tr(y) &lt;= 5; numeric_type = BigFloat)
 maximize
 └─ lambdamin (concave; positive)
-   └─ 3×3 real variable (id: 125…274)
+   └─ 3×3 real variable (id: 120…828)
 subject to
 └─ &lt;= constraint (affine)
    ├─ sum (affine; real)
@@ -45,14 +45,14 @@ Variable
 size: (2, 2)
 sign: complex
 vexity: affine
-id: 354…665
+id: 144…640
 
 julia&gt; E₂ = ComplexVariable(2, 2)
 Variable
 size: (2, 2)
 sign: complex
 vexity: affine
-id: 158…111
+id: 174…788
 
 julia&gt; problem = maximize( real((1//2)*tr(ρ₁*E₁) + (1//2)*tr(ρ₂*E₂)),
                            [E₁ ⪰ 0, E₂ ⪰ 0, E₁ + E₂ == Diagonal(ones(2))];
