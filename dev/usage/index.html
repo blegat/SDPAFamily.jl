@@ -4,7 +4,7 @@ Warning: cholesky miss condition :: not positive definite :: info = 16 :: line 6
 ┌ Warning: &#39;cholesky miss condition&#39; warning detected; results may be unreliable. Try `presolve=true`, or see troubleshooting guide.
 └ @ SDPAFamily ~/build/ericphanson/SDPAFamily.jl/src/binary_call.jl:49
 ┌ Warning: Problem status ITERATION_LIMIT; solution may be inaccurate.
-└ @ Convex ~/.julia/packages/Convex/1aPP8/src/MOI_solve.jl:199</code></pre><p>Applying presolve helps by removing 8 redundant constraints from the final input file.</p><pre><code class="language-julia-repl">julia&gt; solve!(problem, SDPAFamily.Optimizer(presolve = true))
+└ @ Convex ~/.julia/packages/Convex/qKNys/src/MOI_solve.jl:199</code></pre><p>Applying presolve helps by removing 8 redundant constraints from the final input file.</p><pre><code class="language-julia-repl">julia&gt; solve!(problem, SDPAFamily.Optimizer(presolve = true))
 
 julia&gt; @test problem.optval ≈ 1//2 + 1/(2*sqrt(big(2))) atol=1e-30
 Test Passed</code></pre><p>We see we have recovered the true answer to a tolerance of <span>$10^{-30}$</span>.</p><h2><a class="nav-anchor" id="Changing-parameters-and-solving-at-very-high-precision-1" href="#Changing-parameters-and-solving-at-very-high-precision-1">Changing parameters &amp; solving at very high precision</a></h2><p>Continuing the above example, we can also increase the precision by changing the default parameters:</p><pre><code class="language-julia-repl">julia&gt; opt = SDPAFamily.Optimizer(
