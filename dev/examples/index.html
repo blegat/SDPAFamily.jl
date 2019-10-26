@@ -8,12 +8,12 @@ Variable
 size: (3, 3)
 sign: real
 vexity: affine
-id: 211…792
+id: 329…823
 
 julia&gt; p = maximize(lambdamin(y), tr(y) &lt;= 5; numeric_type = BigFloat)
 maximize
 └─ lambdamin (concave; positive)
-   └─ 3×3 real variable (id: 211…792)
+   └─ 3×3 real variable (id: 329…823)
 subject to
 └─ &lt;= constraint (affine)
    ├─ sum (affine; real)
@@ -45,14 +45,14 @@ Variable
 size: (2, 2)
 sign: complex
 vexity: affine
-id: 101…923
+id: 928…376
 
 julia&gt; E₂ = ComplexVariable(2, 2)
 Variable
 size: (2, 2)
 sign: complex
 vexity: affine
-id: 814…306
+id: 102…783
 
 julia&gt; problem = maximize( real((1//2)*tr(ρ₁*E₁) + (1//2)*tr(ρ₂*E₂)),
                            [E₁ ⪰ 0, E₂ ⪰ 0, E₁ + E₂ == Diagonal(ones(2))];
@@ -85,16 +85,16 @@ julia&gt; evaluate(E₂)
            @printf(&quot;%.2e.\n&quot;, error)
        end
 ┌ Warning: Problem status SLOW_PROGRESS; solution may be inaccurate.
-└ @ Convex ~/.julia/packages/Convex/qKNys/src/MOI_solve.jl:199
+└ @ Convex ~/.julia/packages/Convex/Grnmh/src/MOI_solve.jl:199
 sdpa solved the problem with an absolute error of 1.17e-02.
 ┌ Warning: Problem status ITERATION_LIMIT; solution may be inaccurate.
-└ @ Convex ~/.julia/packages/Convex/qKNys/src/MOI_solve.jl:199
+└ @ Convex ~/.julia/packages/Convex/Grnmh/src/MOI_solve.jl:199
 sdpa_dd solved the problem with an absolute error of 8.54e-01.
 ┌ Warning: Problem status ITERATION_LIMIT; solution may be inaccurate.
-└ @ Convex ~/.julia/packages/Convex/qKNys/src/MOI_solve.jl:199
+└ @ Convex ~/.julia/packages/Convex/Grnmh/src/MOI_solve.jl:199
 sdpa_qd solved the problem with an absolute error of 8.54e-01.
 ┌ Warning: Problem status ITERATION_LIMIT; solution may be inaccurate.
-└ @ Convex ~/.julia/packages/Convex/qKNys/src/MOI_solve.jl:199
+└ @ Convex ~/.julia/packages/Convex/Grnmh/src/MOI_solve.jl:199
 sdpa_gmp solved the problem with an absolute error of 8.54e-01.</code></pre><p>We can see that without the presolve routine, we have only recovered the true solution up to errors of size <span>$\sim 10^{-1}$</span> for <code>:sdpa</code> variant. All other variants have failed to produce a result due to redundant constraints and returned with default value 0.</p><p>This problem is revisited at very high precision in <a href="../usage/#Changing-parameters-and-solving-at-very-high-precision-1">Changing parameters &amp; solving at very high precision</a>.</p><h2><a class="nav-anchor" id="Polynomial-optimization-1" href="#Polynomial-optimization-1">Polynomial optimization</a></h2><p>The following example is adapted from an example in the <a href="https://github.com/JuliaOpt/SumOfSquares.jl">SumOfSquares.jl</a> documentation to use SDPAFamily.jl. Even though the problem is only specified with <code>Float64</code>&#39;s, since the entries are specified as integers, they can be sent to SDPA-GMP without a loss of precision.</p><pre><code class="language-julia-repl">julia&gt; using SumOfSquares
 
 julia&gt; using DynamicPolynomials
@@ -150,7 +150,7 @@ Warning: cholesky miss condition :: not positive definite :: info = 144 :: line 
 
 julia&gt; println(objective_value(model))
 3.0</code></pre><p>Let&#39;s check the input file that is used to specify the problem for the SDPA-GMP binary. The following command uses some implementation details of how JuMP stores the underlying optimizer and so may not work in later JuMP versions. However, the following path is always printed when setting <code>verbose = SDPAFamily.VERBOSE</code>.</p><pre><code class="language-julia-repl">julia&gt; path = joinpath(model.moi_backend.optimizer.model.optimizer.tempdir, &quot;input.dat-s&quot;)
-&quot;/tmp/tmpdXrHUA/input.dat-s&quot;
+&quot;/tmp/tmp0CUKPg/input.dat-s&quot;
 
 julia&gt; readlines(path)[1:10] .|&gt; println;
 165
