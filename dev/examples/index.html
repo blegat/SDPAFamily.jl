@@ -8,12 +8,12 @@ Variable
 size: (3, 3)
 sign: real
 vexity: affine
-id: 754…266
+id: 755…431
 
 julia&gt; p = maximize(lambdamin(y), tr(y) &lt;= 5; numeric_type = BigFloat)
 maximize
 └─ lambdamin (concave; positive)
-   └─ 3×3 real variable (id: 754…266)
+   └─ 3×3 real variable (id: 755…431)
 subject to
 └─ &lt;= constraint (affine)
    ├─ sum (affine; real)
@@ -45,14 +45,14 @@ Variable
 size: (2, 2)
 sign: complex
 vexity: affine
-id: 154…130
+id: 121…090
 
 julia&gt; E₂ = ComplexVariable(2, 2)
 Variable
 size: (2, 2)
 sign: complex
 vexity: affine
-id: 861…222
+id: 511…103
 
 julia&gt; problem = maximize( real((1//2)*tr(ρ₁*E₁) + (1//2)*tr(ρ₂*E₂)),
                            [E₁ ⪰ 0, E₂ ⪰ 0, E₁ + E₂ == Diagonal(ones(2))];
@@ -147,8 +147,8 @@ Warning: cholesky miss condition :: not positive definite :: info = 144 :: line 
 └ @ SDPAFamily ~/build/ericphanson/SDPAFamily.jl/src/binary_call.jl:49
 
 julia&gt; println(objective_value(model))
-3.0</code></pre><p>Let&#39;s check the input file that is used to specify the problem for the SDPA-GMP binary. The following command uses some implementation details of how JuMP stores the underlying optimizer and so may not work in later JuMP versions. However, the following path is always printed when setting <code>verbose = SDPAFamily.VERBOSE</code>.</p><pre><code class="language-julia-repl">julia&gt; path = joinpath(model.moi_backend.optimizer.model.optimizer.tempdir, &quot;input.dat-s&quot;)
-&quot;/tmp/tmpKVki1x/input.dat-s&quot;
+3.0</code></pre><p>Let&#39;s check the input file that is used to specify the problem for the SDPA-GMP binary. The following command uses some implementation details of how JuMP stores the underlying optimizer and so may not work in later JuMP versions. However, the following path is always printed when setting <code>verbose = SDPAFamily.VERBOSE</code>.</p><pre><code class="language-julia-repl">julia&gt; path = joinpath(MOI.get(model, SDPAFamily.TemporaryDirectory()),  &quot;input.dat-s&quot;)
+&quot;/tmp/tmp78R0k5/input.dat-s&quot;
 
 julia&gt; readlines(path)[1:10] .|&gt; println;
 165
