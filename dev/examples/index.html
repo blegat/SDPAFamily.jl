@@ -8,12 +8,12 @@ Variable
 size: (3, 3)
 sign: real
 vexity: affine
-id: 755…431
+id: 176…337
 
 julia&gt; p = maximize(lambdamin(y), tr(y) &lt;= 5; numeric_type = BigFloat)
 maximize
 └─ lambdamin (concave; positive)
-   └─ 3×3 real variable (id: 755…431)
+   └─ 3×3 real variable (id: 176…337)
 subject to
 └─ &lt;= constraint (affine)
    ├─ sum (affine; real)
@@ -45,14 +45,14 @@ Variable
 size: (2, 2)
 sign: complex
 vexity: affine
-id: 121…090
+id: 812…427
 
 julia&gt; E₂ = ComplexVariable(2, 2)
 Variable
 size: (2, 2)
 sign: complex
 vexity: affine
-id: 511…103
+id: 579…372
 
 julia&gt; problem = maximize( real((1//2)*tr(ρ₁*E₁) + (1//2)*tr(ρ₂*E₂)),
                            [E₁ ⪰ 0, E₂ ⪰ 0, E₁ + E₂ == Diagonal(ones(2))];
@@ -86,13 +86,13 @@ julia&gt; evaluate(E₂)
        end
 sdpa solved the problem with an absolute error of 7.83e-04.
 ┌ Warning: Problem status ITERATION_LIMIT; solution may be inaccurate.
-└ @ Convex ~/.julia/packages/Convex/5icbz/src/solution.jl:235
+└ @ Convex ~/.julia/packages/Convex/pjPNw/src/solution.jl:224
 sdpa_dd solved the problem with an absolute error of 8.54e-01.
 ┌ Warning: Problem status ITERATION_LIMIT; solution may be inaccurate.
-└ @ Convex ~/.julia/packages/Convex/5icbz/src/solution.jl:235
+└ @ Convex ~/.julia/packages/Convex/pjPNw/src/solution.jl:224
 sdpa_qd solved the problem with an absolute error of 8.54e-01.
 ┌ Warning: Problem status ITERATION_LIMIT; solution may be inaccurate.
-└ @ Convex ~/.julia/packages/Convex/5icbz/src/solution.jl:235
+└ @ Convex ~/.julia/packages/Convex/pjPNw/src/solution.jl:224
 sdpa_gmp solved the problem with an absolute error of 8.54e-01.</code></pre><p>We can see that without the presolve routine, we have only recovered the true solution up to errors of size <span>$\sim 10^{-1}$</span> for <code>:sdpa</code> variant. All other variants have failed to produce a result due to redundant constraints and returned with default value 0.</p><p>This problem is revisited at very high precision in <a href="../usage/#Changing-parameters-and-solving-at-very-high-precision-1">Changing parameters &amp; solving at very high precision</a>.</p><h2><a class="nav-anchor" id="Polynomial-optimization-1" href="#Polynomial-optimization-1">Polynomial optimization</a></h2><p>The following example is adapted from an example in the <a href="https://github.com/JuliaOpt/SumOfSquares.jl">SumOfSquares.jl</a> documentation to use SDPAFamily.jl. Even though the problem is only specified with <code>Float64</code>&#39;s, since the entries are specified as integers, they can be sent to SDPA-GMP without a loss of precision.</p><pre><code class="language-julia-repl">julia&gt; using SumOfSquares
 
 julia&gt; using DynamicPolynomials
@@ -142,25 +142,22 @@ julia&gt; @objective(model, Max, γ)
 γ
 
 julia&gt; optimize!(model)
-Warning: cholesky miss condition :: not positive definite :: info = 144 :: line 643 in sdpa_linear.cpp
-┌ Warning: &#39;cholesky miss condition&#39; warning detected; results may be unreliable. Try `presolve=true`, or see troubleshooting guide.
-└ @ SDPAFamily ~/build/ericphanson/SDPAFamily.jl/src/binary_call.jl:49
 
 julia&gt; println(objective_value(model))
 3.0</code></pre><p>Let&#39;s check the input file that is used to specify the problem for the SDPA-GMP binary. The following command uses some implementation details of how JuMP stores the underlying optimizer and so may not work in later JuMP versions. However, the following path is always printed when setting <code>verbose = SDPAFamily.VERBOSE</code>.</p><pre><code class="language-julia-repl">julia&gt; path = joinpath(MOI.get(model, SDPAFamily.TemporaryDirectory()),  &quot;input.dat-s&quot;)
-&quot;/tmp/tmp78R0k5/input.dat-s&quot;
+&quot;/tmp/tmpGPyn6z/input.dat-s&quot;
 
 julia&gt; readlines(path)[1:10] .|&gt; println;
-165
-3
--2 -240 15
--0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -0.0 -144.0 288.0 648.0 -1224.0 -1305.0 1836.0 1458.0 -972.0 -729.0 768.0 -1344.0 -2592.0 4080.0 3480.0 -3672.0 -1944.0 648.0 -952.0 168.0 5370.0 -1240.0 -8730.0 1188.0 4428.0 -1344.0 7680.0 -9840.0 -5040.0 11880.0 -1944.0 2454.0 -5784.0 -7776.0 23616.0 -14346.0 1072.0 -7344.0 19296.0 -12288.0 -1260.0 4680.0 -3060.0 -720.0 -720.0 -600.0
+45
+2
+-2 15
+-144.0 288.0 648.0 -1224.0 -1305.0 1836.0 1458.0 -972.0 -729.0 768.0 -1344.0 -2592.0 4080.0 3480.0 -3672.0 -1944.0 648.0 -952.0 168.0 5370.0 -1240.0 -8730.0 1188.0 4428.0 -1344.0 7680.0 -9840.0 -5040.0 11880.0 -1944.0 2454.0 -5784.0 -7776.0 23616.0 -14346.0 1072.0 -7344.0 19296.0 -12288.0 -1260.0 4680.0 -3060.0 -720.0 -720.0 -600.0
 0 1 1 1 1.0 
 0 1 2 2 -1.0 
-1 2 1 1 1.0 
-1 2 121 121 -1.0 
-1 3 1 1 -1.0 
-2 2 2 2 1.0</code></pre><p>The full file is longer, but what gets passed to the optimizer for this problem are floating point numbers that can be faithfully read by SDPA-GMP at the 200-bits of precision it uses internally. Thus, in this case, that JuMP restricts the Julia model to store the numbers at machine precision does not affect the precision of data that SDPA-GMP receives. It does, however, affect the precision of data that JuMP can recover from the output file. In this case, JuMP receives the correct answer to full machine precision (<span>$\sim 10^{-16}$</span>), but the true answer printed by SDPA-GMP (which can be seen in the file <code>output.dat-s</code>) is in fact correct to <span>$\sim 10^{-30}$</span> in this case.</p><p>For this kind of problem which uses JuMP, the precision advantage of SDPA-GMP over other problems is that SDPA-GMP should be able to solve the problem to the full <span>$\sim 10^{-16}$</span> precision representable by 64-bit floating point numbers, while solvers which solve the problem in machine precision can only recover the result to <span>$\sim 10^{-8}$</span>.</p><h2><a class="nav-anchor" id="SDP-relaxation-in-polynomial-optimization-problem-1" href="#SDP-relaxation-in-polynomial-optimization-problem-1">SDP relaxation in polynomial optimization problem</a></h2><p>We consider a polynomial optimization problem (POP) where we wish to find <span>$p^* = \inf \lbrace x | x \geq 0,\ x^2 \geq 1 \rbrace$</span>, which has an SDP relaxation of order <span>$r$</span> as</p><img src="https://latex.codecogs.com/svg.latex?\inline&space;\dpi{300}&space;\large&space;\begin{align*}&space;\text{minimize}&\&space;y_1&space;\\&space;\text{such&space;that}&&space;\begin{bmatrix}&space;1&space;&y_1&space;&\dots&space;&y_r&space;\\&space;y_1&space;&&space;y_2&space;&\dots&space;&y_{r&plus;1}&space;\\&space;\vdots&space;&&space;\vdots&space;&&space;\ddots&space;&\vdots&space;\\&space;y_r&space;&&space;y_{r&plus;1}&space;&\dots&space;&y_{2r}&space;\end{bmatrix}&space;&&space;\succeq&space;O\\&space;&&space;\begin{bmatrix}&space;y_1&space;&y_2&space;&\dots&space;&y_r&space;\\&space;y_2&space;&&space;y_3&space;&\dots&space;&y_{r&plus;1}&space;\\&space;\vdots&space;&&space;\vdots&space;&&space;\ddots&space;&\vdots&space;\\&space;y_r&space;&&space;y_{r&plus;1}&space;&\dots&space;&y_{2r-1}&space;\end{bmatrix}&space;&&space;\succeq&space;O\\&space;&\begin{bmatrix}&space;y_2&space;-&space;1&space;&y_3&space;-&space;y_1&space;&\dots&space;&y_{r&plus;1}&space;-&space;y_{r-1}&space;\\&space;y_3-y_1&space;&&space;y_4-y_2&space;&\dots&space;&y_{r&plus;2}&space;-&space;y_r&space;\\&space;\vdots&space;&&space;\vdots&space;&&space;\ddots&space;&\vdots&space;\\&space;y_{r&plus;1}&space;-&space;y_{r-1}&space;&&space;y_{r&plus;2}&space;-y_{r}&space;&\dots&space;&y_{2r}&space;-&space;y_{2r-2}&space;\end{bmatrix}&space;&&space;\succeq&space;O\\&space;&(y_1,\dots,y_{2r})&space;\in&space;\mathbb{R}^{2r}&space;\end{align*}" title="\large \begin{align*} \text{minimize}&\ y_1 \\ \text{such that}& \begin{bmatrix} 1 &y_1 &\dots &y_r \\ y_1 & y_2 &\dots &y_{r+1} \\ \vdots & \vdots & \ddots &\vdots \\ y_r & y_{r+1} &\dots &y_{2r} \end{bmatrix} & \succeq O\\ & \begin{bmatrix} y_1 &y_2 &\dots &y_r \\ y_2 & y_3 &\dots &y_{r+1} \\ \vdots & \vdots & \ddots &\vdots \\ y_r & y_{r+1} &\dots &y_{2r-1} \end{bmatrix} & \succeq O\\ &\begin{bmatrix} y_2 - 1 &y_3 - y_1 &\dots &y_{r+1} - y_{r-1} \\ y_3-y_1 & y_4-y_2 &\dots &y_{r+2} - y_r \\ \vdots & \vdots & \ddots &\vdots \\ y_{r+1} - y_{r-1} & y_{r+2} -y_{r} &\dots &y_{2r} - y_{2r-2} \end{bmatrix} & \succeq O\\ &(y_1,\dots,y_{2r}) \in \mathbb{R}^{2r} \end{align*}" align="middle"/><p>This is an example when most solvers fail due to numerical errors using Float64. It can be shown that for all <span>$r \geq 1$</span>, we have <span>$y_1^* = 0$</span> as the optimal value for the SDP relaxation. However, most solvers will report  <span>$y_1^* = 1$</span>, which is in fact the optimal value for <span>$p^*$</span> in the original problem. The details are discussed in [1]. Such problem can be overcome by using appropriate parameters for <code>SDPA-GMP</code>. We now demonstrate this using <code>Convex.jl</code>.</p><pre><code class="language-julia-repl">julia&gt; using SDPAFamily, SCS, Convex
+1 2 1 1 -1.0 
+2 2 2 1 -1.0 
+3 2 2 2 -1.0 
+3 2 3 1 -1.0</code></pre><p>The full file is longer, but what gets passed to the optimizer for this problem are floating point numbers that can be faithfully read by SDPA-GMP at the 200-bits of precision it uses internally. Thus, in this case, that JuMP restricts the Julia model to store the numbers at machine precision does not affect the precision of data that SDPA-GMP receives. It does, however, affect the precision of data that JuMP can recover from the output file. In this case, JuMP receives the correct answer to full machine precision (<span>$\sim 10^{-16}$</span>), but the true answer printed by SDPA-GMP (which can be seen in the file <code>output.dat-s</code>) is in fact correct to <span>$\sim 10^{-30}$</span> in this case.</p><p>For this kind of problem which uses JuMP, the precision advantage of SDPA-GMP over other problems is that SDPA-GMP should be able to solve the problem to the full <span>$\sim 10^{-16}$</span> precision representable by 64-bit floating point numbers, while solvers which solve the problem in machine precision can only recover the result to <span>$\sim 10^{-8}$</span>.</p><h2><a class="nav-anchor" id="SDP-relaxation-in-polynomial-optimization-problem-1" href="#SDP-relaxation-in-polynomial-optimization-problem-1">SDP relaxation in polynomial optimization problem</a></h2><p>We consider a polynomial optimization problem (POP) where we wish to find <span>$p^* = \inf \lbrace x | x \geq 0,\ x^2 \geq 1 \rbrace$</span>, which has an SDP relaxation of order <span>$r$</span> as</p><img src="https://latex.codecogs.com/svg.latex?\inline&space;\dpi{300}&space;\large&space;\begin{align*}&space;\text{minimize}&\&space;y_1&space;\\&space;\text{such&space;that}&&space;\begin{bmatrix}&space;1&space;&y_1&space;&\dots&space;&y_r&space;\\&space;y_1&space;&&space;y_2&space;&\dots&space;&y_{r&plus;1}&space;\\&space;\vdots&space;&&space;\vdots&space;&&space;\ddots&space;&\vdots&space;\\&space;y_r&space;&&space;y_{r&plus;1}&space;&\dots&space;&y_{2r}&space;\end{bmatrix}&space;&&space;\succeq&space;O\\&space;&&space;\begin{bmatrix}&space;y_1&space;&y_2&space;&\dots&space;&y_r&space;\\&space;y_2&space;&&space;y_3&space;&\dots&space;&y_{r&plus;1}&space;\\&space;\vdots&space;&&space;\vdots&space;&&space;\ddots&space;&\vdots&space;\\&space;y_r&space;&&space;y_{r&plus;1}&space;&\dots&space;&y_{2r-1}&space;\end{bmatrix}&space;&&space;\succeq&space;O\\&space;&\begin{bmatrix}&space;y_2&space;-&space;1&space;&y_3&space;-&space;y_1&space;&\dots&space;&y_{r&plus;1}&space;-&space;y_{r-1}&space;\\&space;y_3-y_1&space;&&space;y_4-y_2&space;&\dots&space;&y_{r&plus;2}&space;-&space;y_r&space;\\&space;\vdots&space;&&space;\vdots&space;&&space;\ddots&space;&\vdots&space;\\&space;y_{r&plus;1}&space;-&space;y_{r-1}&space;&&space;y_{r&plus;2}&space;-y_{r}&space;&\dots&space;&y_{2r}&space;-&space;y_{2r-2}&space;\end{bmatrix}&space;&&space;\succeq&space;O\\&space;&(y_1,\dots,y_{2r})&space;\in&space;\mathbb{R}^{2r}&space;\end{align*}" title="\large \begin{align*} \text{minimize}&\ y_1 \\ \text{such that}& \begin{bmatrix} 1 &y_1 &\dots &y_r \\ y_1 & y_2 &\dots &y_{r+1} \\ \vdots & \vdots & \ddots &\vdots \\ y_r & y_{r+1} &\dots &y_{2r} \end{bmatrix} & \succeq O\\ & \begin{bmatrix} y_1 &y_2 &\dots &y_r \\ y_2 & y_3 &\dots &y_{r+1} \\ \vdots & \vdots & \ddots &\vdots \\ y_r & y_{r+1} &\dots &y_{2r-1} \end{bmatrix} & \succeq O\\ &\begin{bmatrix} y_2 - 1 &y_3 - y_1 &\dots &y_{r+1} - y_{r-1} \\ y_3-y_1 & y_4-y_2 &\dots &y_{r+2} - y_r \\ \vdots & \vdots & \ddots &\vdots \\ y_{r+1} - y_{r-1} & y_{r+2} -y_{r} &\dots &y_{2r} - y_{2r-2} \end{bmatrix} & \succeq O\\ &(y_1,\dots,y_{2r}) \in \mathbb{R}^{2r} \end{align*}" align="middle"/><p>This is an example when most solvers fail due to numerical errors using Float64. It can be shown that for all <span>$r \geq 1$</span>, we have <span>$y_1^* = 0$</span> as the optimal value for the SDP relaxation. However, most solvers will report  <span>$y_1^* = 1$</span>, which is in fact the optimal value for <span>$p^*$</span> in the original problem. The details are discussed in [1]. Such problem can be overcome by using appropriate parameters for <code>SDPA-GMP</code>. We now demonstrate this using <code>Convex.jl</code>.</p><pre><code class="language-julia-repl">julia&gt; using SDPAFamily, SCS, Convex
 
 julia&gt; function relaxed_pop(r::Int, T)
            v = Variable(2*r)
@@ -201,7 +198,7 @@ julia&gt; p1.status
 OPTIMAL::TerminationStatusCode = 1
 
 julia&gt; p1.optval
-0.9999991028992011
+1.0000013561350025
 
 julia&gt; p2.status
 OPTIMAL::TerminationStatusCode = 1
